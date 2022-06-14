@@ -2,7 +2,7 @@ import argparse
 import parser
 from typing import Callable, Optional
 
-from tommas.data import debug_dataset, iterative_action_dataset, cooperative_gridworld_dataset
+from tommas.data import iterative_action_dataset, cooperative_gridworld_dataset
 
 
 dataset_creation_data = dict()
@@ -16,9 +16,6 @@ def add_dataset(argparse_name: str, create_func: Callable, create_func_kwargs: O
         create_func_kwargs = dict()
     dataset_creation_data[argparse_name] = (create_func, create_func_kwargs, verbose_name)
 
-
-add_dataset(argparse_name="debug", create_func=debug_dataset.create_dataset,
-            create_func_kwargs={"single_agent": False}, verbose_name="Debug")
 
 for i in [4]:
     num_opponents = i - 1

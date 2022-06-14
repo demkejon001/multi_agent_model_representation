@@ -2,8 +2,7 @@ import numpy as np
 from typing import List, Dict
 from tqdm import tqdm
 
-from tommas.agents.hand_coded_agents import PathfindingAgent
-from tommas.agents.destination_selector import CollaborativeStatePartitionFilter
+from tommas.agents.gridworld_agents import PathfindingAgent
 from tommas.agents.create_gridworld_agents import get_random_gridworld_agent, RandomAgentParamSampler
 from tommas.env.gridworld_env import GridworldEnv
 from tommas.data.gridworld_trajectory import UnspatialisedGridworldTrajectory
@@ -53,19 +52,8 @@ def get_random_env(reward_funcs):
 
 
 def reassign_agent_indices(agents: List[PathfindingAgent]):
-    collaborative_state_partition_agent_indices = []
     for agent_idx, agent in enumerate(agents):
         agent.destination_selector.agent_idx = agent_idx
-        if agent.destination_selector.state_filters is not None:
-            for state_filter in agent.destination_selector.state_filters:
-                if isinstance(state_filter, CollaborativeStatePartitionFilter):
-                    collaborative_state_partition_agent_indices.append(agent_idx)
-
-    for agent_idx in collaborative_state_partition_agent_indices:
-        for state_filter in agents[agent_idx].destination_selector.state_filters:
-            if isinstance(state_filter, CollaborativeStatePartitionFilter):
-                state_filter.agent_indices = collaborative_state_partition_agent_indices
-                break
 
 
 def get_agent_ids(num_agents, is_training_dataset: bool, seed):

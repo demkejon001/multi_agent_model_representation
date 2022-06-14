@@ -8,9 +8,6 @@ from tommas.env.separated_gridworld import SeparatedGridworld
 from tommas.agents.reward_function import RewardFunction
 from tommas.viz.visual import Drawer, ToMnetRLDrawer
 
-# from tommas.agents.hand_coded_agents import PathfindingAgent
-from tommas.agents.destination_selector import RepositionPicnicDestinationSelector
-
 
 class GridworldEnv(gym.Env):
     def __init__(self,
@@ -155,47 +152,3 @@ class SeparatedGridworldEnv(GridworldEnv):
         super().__init__(num_agents, agent_reward_functions, num_goals, horizon, dim, seed)
         self.world = SeparatedGridworld(num_agents=num_agents, num_goals=num_goals, dim=dim, seed=seed)
         self.state_size = self.world.state.shape
-
-
-class RepositionGridworldEnv(GridworldEnv):
-    def __init__(self,
-                 agents,
-                 agent_reward_functions: List[RewardFunction],
-                 num_goals: int = 4,
-                 horizon: int = 30,
-                 dim: Tuple[int, int] = (11, 11),
-                 min_num_walls: int = 0,
-                 max_num_walls: int = 2,
-                 seed: Union[None, int] = None):
-        super().__init__(len(agents), agent_reward_functions, num_goals, horizon, dim, min_num_walls,
-                         max_num_walls, seed)
-        self.agents = agents
-        for agent in agents:
-            if not isinstance(agent.destination_selector, RepositionPicnicDestinationSelector):
-                raise ValueError("agents should have the RepositionPicnicDestinationSelector")
-        if not self.agents[0].destination_selector.is_primary_selector:
-            raise ValueError("agents[0] should be the primary selector")
-        if self.num_agents <= 1:
-            raise ValueError("RepositionGridworld requires at least 2 agents")
-        self.world = RepositionGridworld(num_agents=self.num_agents, num_goals=num_goals, dim=dim,
-                                         min_num_walls=min_num_walls, max_num_walls=max_num_walls, seed=seed)
-
-    def step(self, actions):
-        if isinstance(actions, int):
-            actions = [actions]
-
-        if self.current_step < self.horizon:
-            self.current_step += 1
-            done = True if self.current_step == self.horizon else False
-            collision_record = self.world.step(actions)
-            if self.agents[0].destination_selector.finished_picnic:
-                self.world.reposition_agents()
-                for agent_idx, agent in enumerate(self.agents):
-                    agent.reset(self.get_world_state(), agent_idx, self.horizon)
-            self.draw()
-            player_rewards = self.calculate_rewards_from_collisions(collision_record)
-            goals_consumed = self.get_goals_consumed_from_collisions(collision_record)
-            return self.get_world_state(), player_rewards, done, goals_consumed
-        else:
-            return None, np.zeros(self.num_agents), True, None
-

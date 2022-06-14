@@ -10,16 +10,11 @@ from tommas.data.agent_trajectory_fetcher import AgentTrajectoryFetcher, AgentGr
     IterativeActionTrajectoryFilepaths
 from tommas.data.gridworld_dataset import GridworldDataset
 from tommas.data.gridworld_datamodule import GridworldDataModule
-# Debug
-from tommas.data.debug_dataset import get_dataset_filepaths as get_debug_dataset_filepaths
-# Action IA/JA
 from tommas.data.iterative_action_dataset import get_dataset_filepaths as get_iterative_action_dataset_filepaths
-# Gridworld
 from tommas.data.cooperative_gridworld_dataset import get_dataset_filepaths as get_gridworld_dataset_filepaths
 
 
 DATASETS = {
-    "debug":  get_debug_dataset_filepaths,
     "action_mirror_ja4": (get_iterative_action_dataset_filepaths, {"num_opponents": 3, "is_ia": False, "tags": "mirror"}),
     "action_wsls_ja4": (get_iterative_action_dataset_filepaths, {"num_opponents": 3, "is_ia": False, "tags": "wsls"}),
     "action_grim_trigger_ja4": (get_iterative_action_dataset_filepaths, {"num_opponents": 3, "is_ia": False, "tags": "grim_trigger"}),
@@ -30,7 +25,6 @@ DATASETS = {
 
 def get_datasets_abbreviation_str(args: Namespace):
     dataset_abbreviations = {
-        "debug": "Debug",
         "action_multi_strat_ja4": "JAMultiStrat4",
         "action_mirror_ja4": "JAMirror4",
         "action_wsls_ja4": "JAWSLS4",

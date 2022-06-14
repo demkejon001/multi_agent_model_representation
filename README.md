@@ -29,12 +29,12 @@ Gridworld:
 python train.py -d "training for gridworld analysis" --model gridworld_tomnet --dataset gridworld --learning_rate .0001 --num_minibatches 40000 --n_past 5 --batch_size 32 --accumulate_grad_batches 1 --log_eval_interval 250 --log_train_interval 50 --seed 1 --char_embedding_size 64 --char_n_layer 8 --char_n_head 8 --mental_embedding_size 64 --mental_n_layer 4 --mental_n_head 8 --pred_net_features 64 --gridworld_embedding_size 64 --action_embedding_size 8 --no_sr
 ```
 
-The `--lstm_char --lstm_mental` commands will make the modellers use LSTMs
+The `--lstm_char --lstm_mental` arguments will make the ToMnet modellers use LSTMs
 
 Additionally you can add:  
 `--model_checkpointing`: to save your models  
 `--logging`: To log your results to [WandB](wandb.ai)  
-`--log_model`: To log you model to [WandB](wandb.ai)
+`--log_model`: To log your model to [WandB](wandb.ai)
 
 # Analysis
 If you use WandB model logging then you can add your artifact links to `load_iterative_action_artifacts.py` or `load_gridworld_artifacts.py` and download your trained modellers.

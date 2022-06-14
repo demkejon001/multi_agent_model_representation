@@ -61,34 +61,18 @@ def get_agent_trajectory_fetcher(args: Namespace) -> Tuple[AgentTrajectoryFetche
 
 
 def get_gridworld_transform_type(args: Namespace):
-    datasets = dataset_check(args)
     model_type = args.model
-
     if "gridworld" in model_type:
         return "gridworld"
-
-    if "past_current" in model_type:
-        return "iterative_action_full_past_current_state_split"
-
-    if "transformer" in model_type or "lstm" in model_type:
-        if "action" in datasets[0]:
-            transform_type = "iterative_action_full_trajectory"
-        else:
-            transform_type = "full_trajectory"
-    else:
-        if "action" in datasets[0]:
-            transform_type = "iterative_action_past_current_split"
-        else:
-            transform_type = "past_current_state_split"
-
-    return transform_type
+    if "iter" in model_type:
+        return "iterative_action"
 
 
 def get_gridworld_transform(args: Namespace) -> TrajectoryTransform:
     transform_type = get_gridworld_transform_type(args)
     if transform_type == "gridworld":
         return GridworldTrajectoryTransform()
-    elif transform_type == "iterative_action_full_past_current_state_split":
+    elif transform_type == "iterative_action":
         return IterativeActionTrajectoryTransform()
     else:
         raise ValueError(f"transform_type {transform_type} is not recognized")

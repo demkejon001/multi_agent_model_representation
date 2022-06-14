@@ -9,7 +9,7 @@ from src.agent_modellers.modeller_inputs import IterativeActionToMnetInput
 from src.agent_modellers.modeller_outputs import IterativeActionToMnetPredictions
 
 
-class IterativeActionPastCurrentNet(AgentModeller):
+class IterativeActionToMnet(AgentModeller):
     def __init__(self,
                  model_type: str,
                  model_name: str,

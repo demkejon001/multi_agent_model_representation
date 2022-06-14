@@ -2,7 +2,7 @@ import argparse
 import parser
 from typing import Callable, Optional
 
-from src.data import iterative_action_dataset, cooperative_gridworld_dataset
+from src.data import iterative_action_dataset, gridworld_dataset
 
 
 dataset_creation_data = dict()
@@ -40,7 +40,7 @@ for i in [4]:
                                     "num_opponents": num_opponents, "is_ia": False, "tags": "mixed_trigger_pattern"},
                 verbose_name=f"Iterative Action Mixed Trigger Pattern JA ({i} agents)")
 
-add_dataset(argparse_name="gridworld", create_func=cooperative_gridworld_dataset.create_dataset,
+add_dataset(argparse_name="gridworld", create_func=gridworld_dataset.create_dataset,
             create_func_kwargs={"num_train_agent_types": {"independent": 1024, "collaborative": 1024},
                                 "num_test_agent_types": {"independent": 24, "collaborative": 24}})
 

@@ -4,14 +4,14 @@ from argparse import Namespace, ArgumentParser
 
 from pytorch_lightning import LightningDataModule
 
-from src.data.gridworld_transforms import GridworldTrajectoryTransform, \
-    IterativeActionFullPastCurrentSplit, CoopGridworldTrajectory
+from src.data.dataset_transforms import TrajectoryTransform, \
+    IterativeActionTrajectoryTransform, GridworldTrajectoryTransform
 from src.data.agent_trajectory_fetcher import AgentTrajectoryFetcher, AgentGridworldFilepaths, \
     IterativeActionTrajectoryFilepaths
-from src.data.gridworld_dataset import GridworldDataset
-from src.data.gridworld_datamodule import GridworldDataModule
+from src.data.dataset_base import ToMnetDataset
+from src.data.datamodule import ToMnetDataModule
 from src.data.iterative_action_dataset import get_dataset_filepaths as get_iterative_action_dataset_filepaths
-from src.data.cooperative_gridworld_dataset import get_dataset_filepaths as get_gridworld_dataset_filepaths
+from src.data.gridworld_dataset import get_dataset_filepaths as get_gridworld_dataset_filepaths
 
 
 DATASETS = {
@@ -84,12 +84,12 @@ def get_gridworld_transform_type(args: Namespace):
     return transform_type
 
 
-def get_gridworld_transform(args: Namespace) -> GridworldTrajectoryTransform:
+def get_gridworld_transform(args: Namespace) -> TrajectoryTransform:
     transform_type = get_gridworld_transform_type(args)
     if transform_type == "gridworld":
-        return CoopGridworldTrajectory()
+        return GridworldTrajectoryTransform()
     elif transform_type == "iterative_action_full_past_current_state_split":
-        return IterativeActionFullPastCurrentSplit()
+        return IterativeActionTrajectoryTransform()
     else:
         raise ValueError(f"transform_type {transform_type} is not recognized")
 
@@ -99,16 +99,16 @@ def make_datamodule(args: Namespace) -> LightningDataModule:
     trajectory_transform = get_gridworld_transform(args)
     collate_fn = trajectory_transform.get_collate_fn()
 
-    train_dataset = GridworldDataset(train_fetcher, trajectory_transform)
-    test_dataset = GridworldDataset(test_fetcher, trajectory_transform)
+    train_dataset = ToMnetDataset(train_fetcher, trajectory_transform)
+    test_dataset = ToMnetDataset(test_fetcher, trajectory_transform)
 
-    return GridworldDataModule(train_dataset, test_dataset, collate_fn, batch_size=args.batch_size, pin_memory=True,
-                               num_workers=args.num_workers, num_batches_in_epoch=args.log_eval_interval,
-                               n_past=args.n_past)
+    return ToMnetDataModule(train_dataset, test_dataset, collate_fn, batch_size=args.batch_size, pin_memory=True,
+                            num_workers=args.num_workers, num_batches_in_epoch=args.log_eval_interval,
+                            n_past=args.n_past)
 
 
 def add_datamodule_specific_args(parser: ArgumentParser, args: Namespace) -> ArgumentParser:
-    parser = GridworldDataModule.add_datamodule_specific_args(parser)
+    parser = ToMnetDataModule.add_datamodule_specific_args(parser)
     return parser
 
 

@@ -15,8 +15,8 @@ import ecco.analysis as analysis
 from pytorch_lightning import seed_everything
 
 from src.agents.create_gridworld_agents import get_random_gridworld_agent, RandomAgentParamSampler
-from src.data.gridworld_transforms import CoopGridworldTrajectory
-from src.data.cooperative_gridworld_dataset import play_episode, get_random_env
+from src.data.dataset_transforms import GridworldTrajectoryTransform
+from src.data.gridworld_dataset import play_episode, get_random_env
 from src.helper_code.metrics import action_loss, action_acc, goal_consumption_loss, goal_acc
 from experiments.experiment_base import load_modeller
 from src.data.dataset_base import save_dataset, load_dataset
@@ -439,7 +439,7 @@ def append_agent_specific_param_scores(df, mask_threshold=.75):
 
 
 def _get_model_prediction_data(model, trajs):
-    transform = CoopGridworldTrajectory()
+    transform = GridworldTrajectoryTransform()
 
     n_past = len(trajs[0]) - 1
     current_gridworld_len = len(trajs[0][0])

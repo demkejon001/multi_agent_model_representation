@@ -11,7 +11,7 @@ from src.agent_modellers.modeller_inputs import IterativeActionToMnetInput, Grid
 from src.agent_modellers.modeller_outputs import AgentObjectives, ActionClassification
 
 
-class GridworldTrajectoryTransform(ABC):
+class TrajectoryTransform(ABC):
     @abstractmethod
     def get_collate_fn(self) -> Callable:
         pass
@@ -45,7 +45,7 @@ class GridworldTrajectoryTransform(ABC):
         return current_traj_len
 
 
-class CoopGridworldTrajectory(GridworldTrajectoryTransform):
+class GridworldTrajectoryTransform(TrajectoryTransform):
     def get_collate_fn(self) -> Callable:
         def collate_fn(batch):
             past_trajectory_batch = pad_sequence([torch.tensor(batch[i][0]) for i in range(len(batch))],
@@ -109,7 +109,7 @@ class CoopGridworldTrajectory(GridworldTrajectoryTransform):
         return past_trajectories, past_actions, current_trajectory, current_actions, actions, goals, hidden_state_indices
 
 
-class IterativeActionFullPastCurrentSplit(GridworldTrajectoryTransform):
+class IterativeActionTrajectoryTransform(TrajectoryTransform):
     def get_collate_fn(self) -> Callable:
         def collate_fn(batch):
             past_trajectory_batch = pad_sequence([torch.tensor(batch[i][0]) for i in range(len(batch))],

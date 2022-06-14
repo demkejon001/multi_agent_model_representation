@@ -14,7 +14,7 @@ import torch
 import ecco.analysis as analysis
 
 from src.agents.create_iterative_action_agents import get_random_iterative_action_agent, RandomStrategySampler
-from src.data.gridworld_transforms import IterativeActionFullPastCurrentSplit
+from src.data.dataset_transforms import IterativeActionTrajectoryTransform
 from src.data.iterative_action_dataset import IterativeActionTrajectory, play_episode
 from src.helper_code.metrics import action_loss, action_acc
 from experiments.experiment_base import load_modeller
@@ -604,7 +604,7 @@ def append_agent_specific_param_lin_scores(df):
 
 
 def _get_model_char_embeddings(model, trajs):
-    transform = IterativeActionFullPastCurrentSplit()
+    transform = IterativeActionTrajectoryTransform()
 
     n_past = len(trajs[0]) - 1
 
@@ -623,7 +623,7 @@ def _get_model_char_embeddings(model, trajs):
 
 
 def _get_model_prediction_data(model, trajs):
-    transform = IterativeActionFullPastCurrentSplit()
+    transform = IterativeActionTrajectoryTransform()
 
     n_past = len(trajs[0]) - 1
     current_gridworld_len = len(trajs[0][0]) - 1

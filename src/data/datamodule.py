@@ -3,10 +3,10 @@ from argparse import ArgumentParser
 from torch.utils.data import DataLoader, RandomSampler
 from pytorch_lightning.core import LightningDataModule
 
-from src.data.gridworld_dataset import GridworldDatasetBatchSampler
+from src.data.dataset_base import ToMnetDatasetBatchSampler
 
 
-class GridworldDataModule(LightningDataModule):
+class ToMnetDataModule(LightningDataModule):
     def __init__(self, train_dataset, val_dataset, collate_fn,
                  batch_size=16, pin_memory=False, num_workers=0, empty_current_traj_probability=1/35, n_past=-1,
                  additional_dataset_kwargs=None, num_batches_in_epoch=None):
@@ -47,11 +47,11 @@ class GridworldDataModule(LightningDataModule):
             sampler = RandomSampler(dataset, num_samples=self.num_batches_in_epoch * self.batch_size, replacement=True)
         else:
             sampler = RandomSampler(dataset)
-        batch_sampler = GridworldDatasetBatchSampler(sampler=sampler, batch_size=self.batch_size, drop_last=True,
-                                                     min_num_episodes=min(10, dataset.min_num_episodes_per_agent),
-                                                     current_traj_len=-1,
-                                                     empty_current_traj_probability=self.empty_current_traj_probability,
-                                                     n_past=self.n_past)
+        batch_sampler = ToMnetDatasetBatchSampler(sampler=sampler, batch_size=self.batch_size, drop_last=True,
+                                                  min_num_episodes=min(10, dataset.min_num_episodes_per_agent),
+                                                  current_traj_len=-1,
+                                                  empty_current_traj_probability=self.empty_current_traj_probability,
+                                                  n_past=self.n_past)
         return DataLoader(dataset, batch_sampler=batch_sampler, collate_fn=self.collate_fn,
                           pin_memory=self.pin_memory, num_workers=self.num_workers)
 

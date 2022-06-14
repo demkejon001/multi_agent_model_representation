@@ -1,6 +1,6 @@
 import pytest
 
-from tommas.helper_code.conv import make_resnet, torch
+from src.helper_code.conv import make_resnet, torch
 
 
 def test_make_resnet():

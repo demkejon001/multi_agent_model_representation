@@ -2,7 +2,7 @@ import math
 import numpy as np
 from typing import List
 
-from tommas.agents.iterative_action_agents import PureStrategyAgent, MixedStrategyAgent, ActionPatternAgent, \
+from src.agents.iterative_action_agents import PureStrategyAgent, MixedStrategyAgent, ActionPatternAgent, \
     TriggerPatternAgent, GrimTriggerAgent, MirrorAgent, WSLSAgent, ActionPatternAndMixedStrategyAgent, \
     ActionPatternAndMirrorAgent, IterativeActionAgent, MixedTriggerPattern
 

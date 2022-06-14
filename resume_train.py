@@ -7,11 +7,11 @@ import torch
 from pytorch_lightning import seed_everything
 
 from experiments.experiment_base import get_pl_trainer
-from tommas.agent_modellers.model_factory import add_model_specific_args, get_model_name, MODELS
-from tommas.data.datamodule_factory import make_datamodule, add_datamodule_specific_args
+from src.agent_modellers.model_factory import add_model_specific_args, get_model_name, MODELS
+from src.data.datamodule_factory import make_datamodule, add_datamodule_specific_args
 
 
-project_name = 'tommas'
+project_name = 'src'
 
 
 def add_trainer_args(parent_parser: ArgumentParser):

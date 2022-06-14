@@ -1,10 +1,10 @@
 import numpy as np
 
-from tommas.env.gridworld_env import GridworldEnv
-from tommas.env.gridworld import GridWorld
-from tommas.agents.reward_function import get_cooperative_reward_functions
-from tommas.data.gridworld_trajectory import GridworldTrajectory
-from tommas.data.agent_trajectory_fetcher import AgentGridworldTrajectories
+from src.env.gridworld_env import GridworldEnv
+from src.env.gridworld import GridWorld
+from src.agents.reward_function import get_cooperative_reward_functions
+from src.data.gridworld_trajectory import GridworldTrajectory
+from src.data.agent_trajectory_fetcher import AgentGridworldTrajectories
 
 
 def test_agent_gridworld_trajectories_append():

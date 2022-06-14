@@ -1,6 +1,6 @@
-from tommas.agents.reward_function import get_cooperative_reward_functions
-from tommas.env.gridworld_env import GridworldEnv, GridWorld
-from tommas.env.gridworld_wrappers import StationaryAgentsEarlyTermination
+from src.agents.reward_function import get_cooperative_reward_functions
+from src.env.gridworld_env import GridworldEnv, GridWorld
+from src.env.gridworld_wrappers import StationaryAgentsEarlyTermination
 
 
 def test_stationary_agents_early_termination():

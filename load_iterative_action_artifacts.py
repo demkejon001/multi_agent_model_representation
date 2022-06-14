@@ -58,7 +58,7 @@ def main():
 
     api = wandb.Api()
     for artifact_link in artifact_links:
-        artifact = api.artifact('jpd0057/tommas/' + artifact_link, type="model")
+        artifact = api.artifact('jpd0057/src/' + artifact_link, type="model")
         artifact_dir = artifact.download()
         modeller_path = artifact_dir + '/model.ckpt'
         modeller = torch.load(modeller_path)

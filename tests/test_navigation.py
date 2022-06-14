@@ -1,5 +1,5 @@
-from tommas.helper_code.navigation import djikstra_actions, maze_traversal
-from tommas.env.gridworld import GridWorld
+from src.helper_code.navigation import djikstra_actions, maze_traversal
+from src.env.gridworld import GridWorld
 
 
 def test_djikstra_actions():

@@ -8,8 +8,8 @@ import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, ProgressBar
 from pytorch_lightning.loggers import WandbLogger
 
-from tommas.agent_modellers.tomnet_base import AgentModeller
-from tommas.agent_modellers.model_factory import MODELS
+from src.agent_modellers.tomnet_base import AgentModeller
+from src.agent_modellers.model_factory import MODELS
 
 
 modeller_extension = ".ckpt"

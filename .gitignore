@@ -185,4 +185,4 @@ tomnet_rl_experiment/
 lightning_logs/
 experiments/wandb/
 experiments/runs/
-!tommas/env
+!src/env

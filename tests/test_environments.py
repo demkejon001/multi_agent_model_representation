@@ -1,9 +1,9 @@
 import numpy as np
 import random
 
-from tommas.env.gridworld import GridWorld
-from tommas.env.gridworld_env import GridworldEnv
-from tommas.agents.reward_function import get_competitive_reward_functions, get_cooperative_reward_functions
+from src.env.gridworld import GridWorld
+from src.env.gridworld_env import GridworldEnv
+from src.agents.reward_function import get_competitive_reward_functions, get_cooperative_reward_functions
 
 
 def test_collisions():

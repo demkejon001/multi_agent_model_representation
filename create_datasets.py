@@ -2,7 +2,7 @@ import argparse
 import parser
 from typing import Callable, Optional
 
-from tommas.data import iterative_action_dataset, cooperative_gridworld_dataset
+from src.data import iterative_action_dataset, cooperative_gridworld_dataset
 
 
 dataset_creation_data = dict()

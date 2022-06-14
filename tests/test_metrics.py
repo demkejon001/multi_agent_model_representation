@@ -1,6 +1,6 @@
 import pytest
 import torch
-from tommas.helper_code.metrics import action_acc, goal_acc, successor_representation_acc, \
+from src.helper_code.metrics import action_acc, goal_acc, successor_representation_acc, \
     successor_representation_loss
 
 

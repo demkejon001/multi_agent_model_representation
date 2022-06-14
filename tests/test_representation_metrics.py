@@ -1,5 +1,5 @@
 import numpy as np
-from tommas.analysis.representation_metrics import generate_random_traj
+from src.analysis.representation_metrics import generate_random_traj
 
 
 def test_generate_random_traj_reproducible():

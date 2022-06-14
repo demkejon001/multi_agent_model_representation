@@ -1,0 +1,269 @@
+# Taken and modified from Nicholas Swift's Medium article
+# https://medium.com/@nicholas.w.swift/easy-a-star-pathfinding-7e6689c7f7b2 for sake of time
+import heapq
+
+
+actions = [(-1, 0), (0, 1), (1, 0), (0, -1)]
+
+
+class Node:
+    """A node class for A* Pathfinding"""
+
+    def __init__(self, parent=None, position=None):
+        self.parent = parent
+        self.position = position
+
+        self.g = 0
+        self.h = 0
+        self.f = 0
+
+    def __eq__(self, other):
+        return self.position == other.position
+
+    def __lt__(self, other):
+        return self.f < other.f
+
+    def __hash__(self):
+        return hash(self.position)
+
+    def __repr__(self):
+        return str(self.position)
+
+
+class DjikstraNodeAction:
+    def __init__(self, parent=None, position=None, action=None):
+        self.parent = parent
+        self.position = position
+        self.action = action
+        self.g = 0
+
+    def __eq__(self, other):
+        return self.position == other.position
+
+    def __repr__(self):
+        return str(self.position)
+
+    def __hash__(self):
+        return hash(self.position)
+
+
+def astar(maze, start, end, goal_positions=None):
+    """Returns a list of tuples as a path from the given start to the given end in the given maze"""
+
+    # Create start and end node
+    start_node = Node(None, start)
+    start_node.g = start_node.h = start_node.f = 0
+    end_node = Node(None, end)
+    end_node.g = end_node.h = end_node.f = 0
+
+    if goal_positions is None:
+        goal_positions = []
+
+    # Initialize both open and closed list
+    open_list = []
+    closed_nodes = set()
+
+    # Add the start node
+    open_list.append(start_node)
+
+    # Loop until you find the end
+    while len(open_list) > 0:
+
+        current_node = heapq.heappop(open_list)
+        closed_nodes.add(current_node)
+
+        # Found the goal
+        if current_node == end_node:
+            path = []
+            current = current_node
+            while current is not None:
+                path.append(current.position)
+                current = current.parent
+            return path[::-1]  # Return reversed path
+
+        # Generate children
+        children = []
+        for new_position in [(0, -1), (0, 1), (-1, 0), (1, 0)]:  # Adjacent squares
+            node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
+
+            # Make sure within range
+            if node_position[0] > (len(maze) - 1) or node_position[0] < 0 or node_position[1] > (
+                    len(maze[len(maze) - 1]) - 1) or node_position[1] < 0:
+                continue
+
+            # Make sure walkable terrain
+            if maze[node_position[0]][node_position[1]] != 0:
+                continue
+
+            # Create new node
+            new_node = Node(current_node, node_position)
+
+            if new_node not in closed_nodes:
+                children.append(new_node)
+
+        # Loop through children
+        for child in children:
+            # Create the f, g, and h values
+            child.g = current_node.g + 1
+            # H: Manhattan distance to end point
+            child.h = abs(child.position[0] - end_node.position[0]) + abs(child.position[1] - end_node.position[1])
+            child.f = child.g + child.h
+
+            for goal_position in goal_positions:
+                if goal_position == child.position:
+                    child.f += 100
+
+            for i, open_node in enumerate(open_list):
+                if child == open_node:
+                    if child.g < open_node.g:
+                        open_list[i] = child
+                        heapq.heapify(open_list)
+                    break
+            else:
+                heapq.heappush(open_list, child)
+
+
+def djikstra_actions(maze, start):
+    """Returns a list of lists, where each list is the actions needed to get from start to every other reachable
+    position"""
+    # Create start and end node
+    start_node = DjikstraNodeAction(None, start)
+    start_node.g = 0
+
+    # Initialize both open and closed list
+    open_list = []
+    closed = set()
+
+    # Add the start node
+    open_list.append(start_node)
+
+    # Loop until you find the end
+    while len(open_list) > 0:
+
+        # Get the current node
+        current_node = open_list[0]
+        current_index = 0
+        for index, item in enumerate(open_list):
+            # if item.f < current_node.f:
+            if item.g < current_node.g:
+                current_node = item
+                current_index = index
+
+        open_list.pop(current_index)
+        closed.add(current_node)
+
+        # Generate children
+        children = []
+        for action, new_position in enumerate(actions):  # Adjacent squares
+
+            # Get node position
+            node_position = (current_node.position[0] + new_position[0], current_node.position[1] + new_position[1])
+
+            # Make sure within range
+            if node_position[0] > (len(maze) - 1) or node_position[0] < 0 or node_position[1] > (
+                    len(maze[len(maze) - 1]) - 1) or node_position[1] < 0:
+                continue
+
+            # Make sure walkable terrain
+            if maze[node_position[0]][node_position[1]] != 0:
+                continue
+
+            # Create new node
+            new_node = DjikstraNodeAction(current_node, node_position, action)
+
+            # Append
+            children.append(new_node)
+
+        # Loop through children
+        for child in children:
+            # Child is on the closed list
+            if child in closed:
+                continue
+
+            else:
+                child.g = current_node.g + 1
+
+                # Child is already in the open list
+                for open_node in open_list:
+                    if child == open_node and child.g >= open_node.g:
+                        break
+                else:
+                    # Add the child to the open list
+                    open_list.append(child)
+
+    possible_trajectories = dict()
+    for node in closed:
+        if node.position == start:
+            continue
+        if node.position not in possible_trajectories:
+            action_trajectory = [node.action]
+            parent = node.parent
+            while parent.position != start:
+                action_trajectory.append(parent.action)
+                parent = parent.parent
+            possible_trajectories[node.position] = list(reversed(action_trajectory))
+    return possible_trajectories
+
+
+def maze_traversal(maze, start):
+    """Returns a list of tuples of possible positions that start can reach given the maze"""
+
+    # Create start and end node
+    start_pos = tuple(start)
+
+    # Initialize both open and closed list
+    open_positions = {start_pos}
+    closed_positions = set()
+
+    # Loop until you find the end
+    while len(open_positions) > 0:
+        current_position = open_positions.pop()
+        closed_positions.add(current_position)
+
+        # Generate neighboring positions
+        for delta_position in [(0, -1), (0, 1), (-1, 0), (1, 0)]:  # Adjacent squares
+
+            # Get node position
+            new_position = (current_position[0] + delta_position[0], current_position[1] + delta_position[1])
+
+            # Make sure within range
+            if new_position[0] > (len(maze) - 1) or new_position[0] < 0 or new_position[1] > (
+                    len(maze[len(maze) - 1]) - 1) or new_position[1] < 0:
+                continue
+
+            # Make sure walkable terrain
+            if maze[new_position[0]][new_position[1]] != 0:
+                continue
+
+            if (new_position not in closed_positions) and (new_position not in open_positions):
+                open_positions.add(new_position)
+
+    return list(closed_positions)
+
+
+def main():
+    maze = [[0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0, 0, 0]]
+
+    maze = [[1, 0, 0], [1, 0, 0], [1, 1, 0], [0, 0, 0]]
+
+    start = (0, 1)
+    # end = (7, 6)
+    #
+    # path = astar(maze, start, end)
+    # print(path)
+
+    possible_positions = maze_traversal(maze, start)
+    print(possible_positions)
+
+
+if __name__ == '__main__':
+    main()

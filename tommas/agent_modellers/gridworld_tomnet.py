@@ -1,14 +1,13 @@
 from argparse import ArgumentParser
-from typing import Union, List
 
 import torch
 import torch.nn as nn
 
-from tommas.agent_modellers.tommas import AgentModeller
 from tommas.agent_modellers.modeller_inputs import GridworldToMnetInput
 from tommas.agent_modellers.modeller_outputs import TOMMASPredictions
-from tommas.helper_code.conv import make_resnet, Conv2DRes
-from tommas.agent_modellers.iterative_action_tomnet import LSTMCharacterNet, LSTMMentalNet, TTXCharacterNet, TTXMentalNet
+from tommas.helper_code.conv import Conv2DRes
+from tommas.agent_modellers.tomnet_base import AgentModeller, LSTMCharacterNet, LSTMMentalNet, TTXCharacterNet, \
+    TTXMentalNet
 
 
 class GridworldNetwork(nn.Module):

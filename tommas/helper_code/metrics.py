@@ -1,6 +1,4 @@
-import numpy as np
 import torch
-import torch.nn as nn
 import torch.nn.functional as F
 
 
@@ -54,29 +52,3 @@ def successor_representation_loss(srs_hat, srs_truth):
     batch_size, num_discount_factors, row, col = srs_hat.shape
     srs_view = (batch_size, num_discount_factors, row*col)
     return -(srs_truth.view(srs_view) * torch.log_softmax(srs_hat.view(srs_view), dim=2)).sum() / batch_size
-
-
-def action_transformer_loss(action_hat, action_truth):
-    action_truth, weighting = action_truth
-    return (F.cross_entropy(action_hat, action_truth, reduction="none") * weighting).sum()
-
-
-def goal_consumption_transformer_loss(goal_consumption_hat, goal_consumption_truth):
-    goal_consumption_truth, weighting = goal_consumption_truth
-    return (torch.sum(F.binary_cross_entropy_with_logits(goal_consumption_hat, goal_consumption_truth, reduction="none"), dim=1) * weighting).sum()
-
-
-def successor_representation_transformer_loss(srs_hat, srs_truth):
-    """
-    Cross Entropy loss across target's distribution, rather than a single target.
-    Expects the srs_hat to be logits and srs_truth to be a probability distribution (where values along row X col sum to 1)
-
-    :param srs_hat: shape (batch, num_discount_factors, row, col)
-    :param srs_truth: shape (batch, num_discount_factors, row, col) same dimensions as srs_hat
-    """
-    srs_truth, weighting = srs_truth
-    if weighting.dim() == 1:
-        weighting = weighting.unsqueeze(1)
-    batch_size, num_discount_factors, row, col = srs_hat.shape
-    srs_view = (batch_size, num_discount_factors, row*col)
-    return (torch.sum(-(srs_truth.view(srs_view) * torch.log_softmax(srs_hat.view(srs_view), dim=2)), dim=2) * weighting).sum()

@@ -2,15 +2,13 @@ import os
 import wandb
 from argparse import ArgumentParser, Namespace
 import torch
-import random
-import numpy
 import math
 
 import pytorch_lightning as pl
 from pytorch_lightning.callbacks import EarlyStopping, ModelCheckpoint, ProgressBar
 from pytorch_lightning.loggers import WandbLogger
 
-from tommas.agent_modellers.tommas import AgentModeller
+from tommas.agent_modellers.tomnet_base import AgentModeller
 from tommas.agent_modellers.model_factory import MODELS
 
 

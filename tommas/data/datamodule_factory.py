@@ -4,8 +4,7 @@ from argparse import Namespace, ArgumentParser
 
 from pytorch_lightning import LightningDataModule
 
-from tommas.data.gridworld_transforms import GridworldTrajectoryTransform, FullTrajectory, PastCurrentStateSplit, \
-    IterativeActionFullTrajectory, IterativeActionPastCurrentSplit, \
+from tommas.data.gridworld_transforms import GridworldTrajectoryTransform, \
     IterativeActionFullPastCurrentSplit, CoopGridworldTrajectory
 from tommas.data.agent_trajectory_fetcher import AgentTrajectoryFetcher, AgentGridworldFilepaths, \
     IterativeActionTrajectoryFilepaths
@@ -95,20 +94,6 @@ def get_gridworld_transform(args: Namespace) -> GridworldTrajectoryTransform:
     transform_type = get_gridworld_transform_type(args)
     if transform_type == "gridworld":
         return CoopGridworldTrajectory()
-    elif transform_type == "full_trajectory":
-        # return FullTrajectory(remove_actions=args.remove_actions, remove_other_agents=args.remove_other_agents,
-        #                       attach_agent_ids=args.attach_agent_ids, keep_goals=args.keep_goals)
-        return FullTrajectory()
-    elif transform_type == "past_current_state_split":
-        # return PastCurrentStateSplit(remove_actions=args.remove_actions, concat_past_traj=args.concat_past_traj,
-        #                              remove_other_agents=args.remove_other_agents,
-        #                              attach_agent_ids=args.attach_agent_ids, keep_goals=args.keep_goals)
-        return PastCurrentStateSplit()
-    elif transform_type == "iterative_action_past_current_split":
-        # return IterativeActionPastCurrentSplit(concat_past_traj=args.concat_past_traj)
-        return IterativeActionPastCurrentSplit()
-    elif transform_type == "iterative_action_full_trajectory":
-        return IterativeActionFullTrajectory()
     elif transform_type == "iterative_action_full_past_current_state_split":
         return IterativeActionFullPastCurrentSplit()
     else:

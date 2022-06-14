@@ -6,7 +6,8 @@ from tommas.agents.destination_selector import DestinationSelector, MultiAgentDe
     HighestGoalRanker, ClosestDistanceGoalRanker, DiscountGoalRanker, DistancePenaltyGoalRanker, \
     CollaborativeStatePartitionFilter, PicnicDestinationSelector, StaticCircleFilter, StaticSquareFilter, \
     StaticDiamondFilter, SinglePicnicDestinationSelector
-from tommas.agents.create_handcodedagents import create_agent
+# from tommas.agents.create_handcodedagents import create_agent
+from tommas.agents.create_gridworld_agents import get_random_gridworld_agent, RandomAgentParamSampler
 from tommas.agents.reward_function import get_cooperative_reward_functions, RewardFunction
 from tommas.env.gridworld_env import GridworldEnv, GridWorld
 
@@ -182,8 +183,9 @@ def test_colab_highest_goal_preference():
     env.dim = dim
     state = np.copy(gridworld.state)
 
-    agents, _, _ = create_agent(reward_funcs, goal_ranker_type="highest", goal_ranker_args=(True,),
-                                generate_fake_agent_ids=True, is_collaborative=True)
+    raps = RandomAgentParamSampler(0, True)
+    agents, _ = get_random_gridworld_agent("collaborative", raps, [-1, -1, -1], goal_rewards=goal_rewards,
+                                           num_goals=len(goal_rewards), goal_ranker_type="highest")
 
     for agent_idx, agent in enumerate(agents):
         agent.reset(state, agent_idx)

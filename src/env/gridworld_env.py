@@ -3,8 +3,7 @@ from typing import List, Tuple, Union
 import gym
 from gym.spaces import Discrete, Box
 
-from src.env.gridworld import GridWorld, RepositionGridworld
-from src.env.separated_gridworld import SeparatedGridworld
+from src.env.gridworld import GridWorld
 from src.agents.reward_function import RewardFunction
 from src.viz.visual import Drawer, ToMnetRLDrawer
 
@@ -145,10 +144,3 @@ class ToMnetRLGridworldEnv(GridworldEnv):
         position = self.get_agent_position()
         mask = self.get_mask(position)
         return np.multiply(state, mask)
-
-
-class SeparatedGridworldEnv(GridworldEnv):
-    def __init__(self, num_agents, agent_reward_functions, num_goals=4, horizon=30, dim=(11, 11), seed=None):
-        super().__init__(num_agents, agent_reward_functions, num_goals, horizon, dim, seed)
-        self.world = SeparatedGridworld(num_agents=num_agents, num_goals=num_goals, dim=dim, seed=seed)
-        self.state_size = self.world.state.shape

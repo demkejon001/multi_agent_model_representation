@@ -1,5 +1,5 @@
 import numpy as np
-from src.analysis.representation_metrics import generate_random_traj
+from src.analysis.iterative_action_representation_metrics import generate_random_traj
 
 
 def test_generate_random_traj_reproducible():

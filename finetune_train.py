@@ -1,7 +1,6 @@
 import os
 from argparse import ArgumentParser, Namespace
 import numpy as np
-import pytorch_lightning
 import wandb
 
 import torch
@@ -12,7 +11,7 @@ from src.agent_modellers.model_factory import add_model_specific_args, get_model
 from src.data.datamodule_factory import make_datamodule, add_datamodule_specific_args
 
 
-project_name = 'src'
+project_name = 'mam_representation'
 
 
 def add_trainer_args(parent_parser: ArgumentParser):

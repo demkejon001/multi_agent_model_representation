@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
 
-from src.analysis.representation_metrics import load_representation_data, get_representation_similarity_score
+from src.analysis.iterative_action_representation_metrics import load_representation_data, get_representation_similarity_score
 
 plot_dirpath = "data/imgs/iterative_action/"
 
